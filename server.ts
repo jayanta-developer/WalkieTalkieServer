@@ -1,6 +1,7 @@
 import express from "express";
 import http from "http";
 import { Server, Socket } from "socket.io";
+import cors from "cors";
 
 interface User {
   id: string;
@@ -13,12 +14,20 @@ interface UsersByFrequency {
 
 const app = express();
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
   },
+  transports: ["websocket"],
 });
+
+app.use(
+  cors({
+    origin: "*", // Or replace '*' with your front-end's domain
+  })
+);
 
 const usersByFrequency: UsersByFrequency = {};
 
